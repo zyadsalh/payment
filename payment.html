@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تفاصيل الدفع</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #2d2d2d; /* لون خلفية داكن */
+            color: #fff; /* لون النص */
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: #1c1c1c; /* لون خلفية داكن للصندوق */
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            margin: auto;
+        }
+        h1 {
+            color: #fff; /* لون العنوان */
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #2d2d2d; /* خلفية الحقول */
+            color: #fff;
+        }
+        .number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #25D366; /* لون الأرقام */
+            margin: 20px 0;
+            cursor: pointer;
+        }
+        .instructions {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+        .error-message {
+            color: red;
+            display: none;
+        }
+        .copied-message {
+            display: none;
+            color: green;
+            margin-top: 10px;
+        }
+        .button {
+            background-color: #25D366;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>تفاصيل الدفع</h1>
+
+    <div class="instructions">قم بالتحويل على أحد الأرقام التالية:</div>
+    <div class="number" onclick="copyText('01094383927')">01094383927</div>
+    <div class="number" onclick="copyText('01205782146')">01205782146</div>
+
+    <div id="copiedMessage" class="copied-message">تم نسخ الرقم!</div>
+
+    <div class="instructions">ثم أدخل البيانات التالية:</div>
+
+    <input type="text" id="username" class="input-field" placeholder="اسم المستخدم">
+    <div id="usernameError" class="error-message">برجاء إدخال اسم المستخدم</div>
+
+    <input type="text" id="operationId" class="input-field" placeholder="رقم العملية">
+    <div id="operationIdError" class="error-message">برجاء إدخال رقم العملية</div>
+
+    <input type="number" id="amount" class="input-field" placeholder="مبلغ الشحن">
+    <div id="amountError" class="error-message">برجاء إدخال مبلغ الشحن</div>
+
+    <button class="button" onclick="validateAndSend()">دفع</button>
+</div>
+
+<script>
+    function copyText(text) {
+        var textarea = document.createElement("textarea");
+        textarea.value = text;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+        
+        var copiedMessage = document.getElementById("copiedMessage");
+        copiedMessage.style.display = "block";
+        setTimeout(function() {
+            copiedMessage.style.display = "none";
+        }, 2000);
+    }
+
+    function validateAndSend() {
+        var username = document.getElementById('username').value.trim();
+        var operationId = document.getElementById('operationId').value.trim();
+        var amount = document.getElementById('amount').value.trim();
+
+        var isValid = true;
+
+        document.getElementById('usernameError').style.display = 'none';
+        document.getElementById('operationIdError').style.display = 'none';
+        document.getElementById('amountError').style.display = 'none';
+
+        if (username === "") {
+            document.getElementById('usernameError').style.display = 'block';
+            isValid = false;
+        }
+        if (operationId === "") {
+            document.getElementById('operationIdError').style.display = 'block';
+            isValid = false;
+        }
+        if (amount === "") {
+            document.getElementById('amountError').style.display = 'block';
+            isValid = false;
+        }
+
+        if (isValid) {
+            // توليد كود عشوائي يبدأ بعلامة #
+            var code = "#" + Math.floor(1000 + Math.random() * 9000);
+
+            // إنشاء الرسالة مع الكود العشوائي
+            var message = `${code}\nاسم المستخدم: ${username}\nرقم العملية: ${operationId}\nمبلغ الشحن: ${amount}`;
+
+            // إرسال الرسالة عبر الواتساب
+            var whatsappUrl = `https://wa.me/201152988407?text=${encodeURIComponent(message)}`;
+            window.location.href = whatsappUrl;
+        }
+    }
+</script>
+
+</body>
+</html>
